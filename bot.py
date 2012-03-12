@@ -6,7 +6,7 @@ from orders import *
 
 class IAMABot(irc.IRCClient):
     def __init__(self):
-        engine = create_engine('sqlite:///bot.db')
+        engine = create_engine('sqlite:///sovereign.db')
         Session = sessionmaker(bind=engine)
 
         self.session = Session()
@@ -23,8 +23,7 @@ class IAMABot(irc.IRCClient):
         for orderset in self.sovereign.ordersets:
             order_commands["@" + orderset.name] = orderset
             order_commands["@update" + orderset.name] = orderset
-
-        nick = user.split('!', 1)[0]
+        
         msgsplit = msg.split(' ')
         if (msgsplit[0] in order_commands):
             if (msgsplit[0].find('@update') != 0):
@@ -33,6 +32,14 @@ class IAMABot(irc.IRCClient):
     def showOrder(self, orderset, user, channel, msg):
         for order in orderset:
             self.msg(channel, order.encode())
+
+    def updateOrder(self, orderset, user, channel, msg):
+        msgsplit = msg.split(' ')
+        number = msgsplit[1]
+        territory = msgsplit[2]
+        link = msgsplit[3]
+        notes = msgsplit[4]
+        # todo
 
 
 class SovereignFactory(protocol.ClientFactory):
