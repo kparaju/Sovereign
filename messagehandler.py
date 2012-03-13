@@ -9,6 +9,7 @@ class SovereignMessageHandler:
         self.msg = msg
         self.msg_split = msg.split(' ')
         self.sovereign = sovereign
+        self.response = []
 
         # Generate a hash linking the order fetch and receive commands to the right OrderSet
         order_commands = {}
@@ -23,28 +24,42 @@ class SovereignMessageHandler:
             else:
                 self.updateOrder(order_commands[self.msg_split[0]], user, channel, msg)
 
+
     def showOrder(self, order_set, user, channel, msg):
         counter = 1
         self.response = []
 
         for order in order_set.orders:
-            message = "Priority %s %s | %s | %s" % (counter, order.territory, order.url, order.info)
+            message = "\002Priority %s:\002 \00304%s\017 | \037\00302%s\017 | %s" % (counter, order.territory, order.url, order.info)
             self.response.append(message)
             counter = counter + 1
 
         if (counter == 1):
-            self.response.append(message)
+            self.response.append("No orders found.")
 
     def updateOrder(self, order_set, user, channel, msg):
         self.response = []
 
-        number = int(self.msg_split[1]) - 1
+        number = -1
+        if self.msg_split[1].isdigit():
+            number = int(self.msg_split[1]) - 1
+        else:
+            if self.msg_split[1] == "clear":
+                del order_set.orders[:]
+                self.response.append("Orders cleared")
+                return
 
         if (number < 0):
             self.response.append("You're doing it wrong!")
             return
 
         territory = self.msg_split[2]
+
+        if ((territory == "clear") & (len(order_set.orders) <= number)):
+            del order_set.orders[number]
+            self.response.append("Order cleared")
+            return
+
         url = self.msg_split[3]
         info = self.msg_split[4]
 

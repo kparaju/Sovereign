@@ -75,6 +75,7 @@ class Order(Base):
 
     orderset_id = Column(Integer, ForeignKey('ordersets.id'))
 
+
     def __init__(self, territory, url, info):
         self.territory = territory
         self.url = url
@@ -82,5 +83,7 @@ class Order(Base):
 
     def __repr__(self):
         return "<Order('%s','%s','%s')>" % (self.territory, self.url, self.info)
+
+
 
 

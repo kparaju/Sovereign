@@ -3,6 +3,7 @@ from twisted.internet import reactor, protocol
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from orders import *
+from messagehandler import *
 
 class IAMABot(irc.IRCClient):
     def __init__(self):
@@ -19,28 +20,14 @@ class IAMABot(irc.IRCClient):
             self.join(chan.name.encode(), chan.key.encode())
 
     def privmsg(self, user, channel, msg):
-        order_commands = {}
-        for orderset in self.sovereign.ordersets:
-            order_commands["@" + orderset.name] = orderset
-            order_commands["@update" + orderset.name] = orderset
 
-        msgsplit = msg.split(' ')
-        if (msgsplit[0] in order_commands):
-            if (msgsplit[0].find('@update') != 0):
-                self.showOrder(order_commands[msgsplit[0]], user, channel, msg)
+        message_handler = SovereignMessageHandler(self.sovereign, user, channel, msg)
+        for response in message_handler.response:
+            self.msg(channel, response.encode())
 
-    def showOrder(self, orderset, user, channel, msg):
-        for order in orderset.orders:
-            self.msg(channel, order.__repr__().encode())
+        # Commit any changes made by the message handler
 
-    def updateOrder(self, orderset, user, channel, msg):
-        msgsplit = msg.split(' ')
-        number = msgsplit[1]
-        territory = msgsplit[2]
-        link = msgsplit[3]
-        notes = msgsplit[4]
-        # todo
-
+        self.session.commit()
 
 class SovereignFactory(protocol.ClientFactory):
 
