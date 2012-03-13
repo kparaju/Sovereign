@@ -1,0 +1,9 @@
+Sovereign - An IRC Bot
+
+Not ready for production yet.
+
+Requirements:
+- twisted
+- sqlalchemy
+
+License: MIT (read LICENSE)
