@@ -10,9 +10,9 @@ class IAMABot(irc.IRCClient):
         Session = sessionmaker(bind=engine)
 
         self.session = Session()
-        # Just use the first database entry right now
         self.sovereign = self.session.query(Sovereign).first()
         self.nickname = self.sovereign.nickname.encode()
+        self.password = self.sovereign.serverpass.encode()
 
     def signedOn(self):
         for chan in self.sovereign.ircchannels:
@@ -23,15 +23,15 @@ class IAMABot(irc.IRCClient):
         for orderset in self.sovereign.ordersets:
             order_commands["@" + orderset.name] = orderset
             order_commands["@update" + orderset.name] = orderset
-        
+
         msgsplit = msg.split(' ')
         if (msgsplit[0] in order_commands):
             if (msgsplit[0].find('@update') != 0):
-                showOrder(order_commands[msgsplit[0]], user, channel, msg)
+                self.showOrder(order_commands[msgsplit[0]], user, channel, msg)
 
     def showOrder(self, orderset, user, channel, msg):
-        for order in orderset:
-            self.msg(channel, order.encode())
+        for order in orderset.orders:
+            self.msg(channel, order.__repr__().encode())
 
     def updateOrder(self, orderset, user, channel, msg):
         msgsplit = msg.split(' ')
@@ -43,12 +43,15 @@ class IAMABot(irc.IRCClient):
 
 
 class SovereignFactory(protocol.ClientFactory):
+
+    def __init__(self):
+        self.bot = IAMABot()
+
     def buildProtocol(self, addr):
-        bot = IAMABot()
-        bot.factory = self
-        return bot
+        self.bot.factory = self
+        return self.bot
 
 if __name__ == '__main__':
-    sovereign = SovereignFactory()
-    reactor.connectTCP("irc.rizon.net", 6667, sovereign)
+    sf = SovereignFactory()
+    reactor.connectTCP(sf.bot.sovereign.serverhost, sf.bot.sovereign.serverport, sf)
     reactor.run()

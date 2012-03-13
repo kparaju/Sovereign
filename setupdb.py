@@ -15,10 +15,11 @@ if (os.path.isfile("sovereign.db")):
 
 Base.metadata.create_all(engine)
 
-# Todo create the schema (look it up)
-
 s = Sovereign("Sovereign-Beta")
-c = IRCChannel("#sovereign")
+s.serverhost = "irc.rizon.net"
+s.serverport = 6667
+s.serverpass = ""
+c = IRCChannel("#sovereign-beta")
 s.ircchannels.append(c)
 
 os = OrderSet("home")

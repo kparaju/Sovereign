@@ -11,6 +11,9 @@ class Sovereign(Base):
     id = Column(Integer, Sequence('sovereign_id_seq'), primary_key=True)
 
     nickname = Column(String)
+    serverpass = Column(String)
+    serverhost = Column(String)
+    serverport = Column(Integer)
 
     ordersets = relationship('OrderSet', order_by='OrderSet.id', backref='sovereign')
     ircchannels = relationship('IRCChannel', order_by='IRCChannel.name', backref='sovereign')
