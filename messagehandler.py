@@ -59,16 +59,25 @@ class SovereignMessageHandler:
 
             self.bot.part(self.msg_split[1])
 
-        elif (self.msg_split[0] == '@who'):
-            bot.who(channel)
 
 
-
-    def findChannel(self, channel_name):
+    def findChannel(self, channel_name, channel_pool = None):
+        channel_pool = self.sovereign.ircchannels if channel_pool == None else channel_pool
         channel_name = channel_name.lower()
         index = 0
         for irc_chan in self.sovereign.ircchannels:
             if (irc_chan.name.lower() == channel_name):
+                return index
+            index = index + 1
+
+        return -1
+
+    def findUser(self, user_nick, user_pool = None):
+        user_pool = self.sovereign.ircusers if user_pool == None else user_pool
+        user_nick = user_nick.lower()
+        index = 0
+        for irc_user in user_pool:
+            if (irc_user.nick.lower() == user_nick):
                 return index
             index = index + 1
 
@@ -89,6 +98,12 @@ class SovereignMessageHandler:
 
     def updateOrder(self, order_set, user, channel, msg):
         self.response = []
+
+        user_index = self.findUser(user, order_set.admins)
+
+        if (user_index == -1):
+            self.response.append("Not authorized")
+            return
 
         number = -1
         if self.msg_split[1].isdigit():

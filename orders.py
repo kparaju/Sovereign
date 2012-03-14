@@ -24,7 +24,7 @@ class Sovereign(Base):
 
 
 class IRCUser(Base):
-    __tablename__ = 'ircuser'
+    __tablename__ = 'ircusers'
     id = Column(Integer, Sequence('ircuser_id_seq'), primary_key=True)
 
     nick = Column(String)
@@ -55,17 +55,16 @@ class IRCChannel(Base):
     def __repr__(self):
         return "<IRCChannel ('%s', '%s')>" % (self.name, self.key)
 
-class ChannelOrderSetAssociation(Base):
-    __tablename__ = 'channel_order_association'
-    orderset_id = Column(Integer, ForeignKey('ordersets.id'), primary_key=True)
-    ircchannel_id = Column(Integer, ForeignKey('ircchannels.id'), primary_key=True)
-    ircchannel = relationship("IRCChannel")
 
-class IRCUserOrderSetAssociation(Base):
-    __tablename__ = 'ircuser_order_association'
-    orderset_id = Column(Integer, ForeignKey('ordersets.id'), primary_key=True)
-    ircuser_id = Column(Integer, ForeignKey('ircuser.id'), primary_key=True)
-    ircuser = relationship("IRCUser")
+orderset_authorized_channels_table = Table('orderset_authorized_channels', Base.metadata,
+    Column('orderset_id', Integer, ForeignKey('ordersets.id')),
+    Column('ircchannel_id', Integer, ForeignKey('ircchannels.id'))
+)
+
+orderset_authorized_users_table = Table('orderset_authorized_users', Base.metadata,
+    Column('orderset_id', Integer, ForeignKey('ordersets.id')),
+    Column('ircuser_id', Integer, ForeignKey('ircusers.id'))
+)
 
 class OrderSet(Base):
     __tablename__ = 'ordersets'
@@ -74,8 +73,9 @@ class OrderSet(Base):
     name = Column(String)
     orders = relationship('Order', order_by='Order.id', backref='orderset')
     sovereign_id = Column(Integer, ForeignKey('sovereign.id'))
-    channels = relationship("ChannelOrderSetAssociation")
-    admins = relationship("IRCUserOrderSetAssociation")
+    authorized_channels = relationship("IRCChannel", secondary=orderset_authorized_channels_table,
+        backref="ordersets")
+    admins = relationship("IRCUser", secondary=orderset_authorized_users_table, backref= "ordersets")
 
 
     def __init__(self, name):
