@@ -43,8 +43,7 @@ class SovereignMessageHandler:
         if (self.msg_split[0] == "@join"):
 
             # Do some validation
-            if (len(self.msg_split) < 2):
-                self.response.append("Not enough params")
+            if (not self.verifyNumberOfParams(2)):
                 return
 
             channel_to_join = self.msg_split[1]
@@ -63,10 +62,8 @@ class SovereignMessageHandler:
             self.bot.join(channel_to_join, channel_password)
 
         elif (self.msg_split[0] == "@part"):
-            if (len(self.msg_split) < 2):
-                self.response.append("Not enough params")
+            if (not self.verifyNumberOfParams(2)):
                 return
-
             chan_index = self.findChannel(self.msg_split[1])
 
             if (chan_index > -1):
@@ -76,8 +73,7 @@ class SovereignMessageHandler:
 
         elif (self.msg_split[0] == "@adduser"):
 
-            if (len(self.msg_split) < 3):
-                self.response.append("Not enough params")
+            if (not self.verifyNumberOfParams(3)):
                 return
 
             user_index = self.findUser(self.msg_split[1])
@@ -99,8 +95,7 @@ class SovereignMessageHandler:
 
         elif (self.msg_split[0] == "@deleteuser"):
 
-            if (len(self.msg_split) < 3):
-                self.response.append("Not enough params")
+            if (not self.verifyNumberOfParams(3)):
                 return
 
             user_index = self.findUser(self.msg_split[1])
@@ -122,8 +117,7 @@ class SovereignMessageHandler:
 
         elif (self.msg_split[0] == "@listusers"):
 
-            if (len(self.msg_split) < 2):
-                self.response.append("Not enough params")
+            if (not self.verifyNumberOfParams(2)):
                 return
 
             if (not ("@" + self.msg_split[1]) in order_commands):
@@ -140,8 +134,7 @@ class SovereignMessageHandler:
 
         elif (self.msg_split[0] == "@addchan"):
 
-            if (len(self.msg_split) < 3):
-                self.response.append("Not enough params")
+            if (not self.verifyNumberOfParams(3)):
                 return
 
             channel_index = self.findChannel(self.msg_split[1])
@@ -163,8 +156,7 @@ class SovereignMessageHandler:
 
         elif (self.msg_split[0] == "@deletechan"):
 
-            if (len(self.msg_split) < 3):
-                self.response.append("Not enough params")
+            if (not self.verifyNumberOfParams(3)):
                 return
 
             chan_index = self.findChannel(self.msg_split[1])
@@ -186,8 +178,7 @@ class SovereignMessageHandler:
 
         elif (self.msg_split[0] == "@listchans"):
 
-            if (len(self.msg_split) < 2):
-                self.response.append("Not enough params")
+            if (not self.verifyNumberOfParams(2)):
                 return
 
             if (not ("@" + self.msg_split[1]) in order_commands):
@@ -204,7 +195,8 @@ class SovereignMessageHandler:
 
         elif (self.msg_split[0] == "@addadmin"):
 
-
+            if (not self.verifyNumberOfParams(2)):
+                return
 
             user_index = self.findUser(self.msg_split[1])
             if (user_index == -1):
@@ -219,8 +211,7 @@ class SovereignMessageHandler:
 
         elif (self.msg_split[0] == "@deleteuser"):
 
-            if (len(self.msg_split) < 2):
-                self.response.append("Not enough params")
+            if (not self.verifyNumberOfParams(2)):
                 return
 
             user_index = self.findUser(self.msg_split[1])
