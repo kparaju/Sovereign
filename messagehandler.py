@@ -18,14 +18,29 @@ class SovereignMessageHandler:
             order_commands["@" + order_set.name] = order_set
             order_commands["@update" + order_set.name] = order_set
 
+
+        user = user.split('!')[0]
+        user_index = self.findUser(user)
+
+
         # Check to see if the command the user supplied is an "order" command
         if (self.msg_split[0] in order_commands):
+
+            channel_index = self.findChannel(channel, order_commands[self.msg_split[0]].authorized_channels)
+
+            if (channel_index == -1):
+                return
+
             if (self.msg_split[0].find('@update') != 0):
                 self.showOrder(order_commands[self.msg_split[0]], user, channel, msg)
             else:
                 self.updateOrder(order_commands[self.msg_split[0]], user, channel, msg)
 
-        elif (self.msg_split[0] == "@join"):
+
+        if (not self.sovereign.ircusers[user_index].admin):
+            return
+
+        if (self.msg_split[0] == "@join"):
 
             # Do some validation
             if (len(self.msg_split) < 2):
@@ -59,13 +74,142 @@ class SovereignMessageHandler:
 
             self.bot.part(self.msg_split[1])
 
+        elif (self.msg_split[0] == "@adduser"):
+
+            if (len(self.msg_split) < 3):
+                self.response.append("Not enough params")
+                return
+
+            user_index = self.findUser(self.msg_split[1])
+            if (user_index == -1):
+                user_to_add = IRCUser(self.msg_split[1])
+                self.sovereign.ircusers.append(user_to_add)
+            else:
+                user_to_add = self.sovereign.ircusers[user_index]
+
+            if (not ("@" + self.msg_split[2]) in order_commands):
+                self.response.append("Invalid orderset")
+                return
+
+            orderset = order_commands["@" + self.msg_split[2]]
+
+            orderset.admins.append(user_to_add)
+
+            self.response.append("Added user to orderset")
+
+        elif (self.msg_split[0] == "@deleteuser"):
+
+            if (len(self.msg_split) < 3):
+                self.response.append("Not enough params")
+                return
+
+            user_index = self.findUser(self.msg_split[1])
+
+            if (user_index == -1):
+                self.response.append("Invalid user")
+                return
+
+
+            if (not ("@" + self.msg_split[2]) in order_commands):
+                self.response.append("Invalid orderset")
+                return
+
+            orderset = order_commands["@" + self.msg_split[2]]
+
+            del orderset.admins[user_index]
+
+            self.response.append("Deleted user from orderset")
+
+        elif (self.msg_split[0] == "@listusers"):
+
+            if (len(self.msg_split) < 2):
+                self.response.append("Not enough params")
+                return
+
+            if (not ("@" + self.msg_split[1]) in order_commands):
+                self.response.append("Invalid orderset")
+                return
+
+            orderset = order_commands["@" + self.msg_split[1]]
+
+            users_list = []
+            for admin in orderset.admins:
+                users_list.append(admin.nick)
+
+            self.response.append("List of users: " + (", ".join(users_list)))
+
+        elif (self.msg_split[0] == "@addchan"):
+
+            if (len(self.msg_split) < 3):
+                self.response.append("Not enough params")
+                return
+
+            channel_index = self.findChannel(self.msg_split[1])
+            if (channel_index == -1):
+                channel_to_add = IRCChannel(self.msg_split[1])
+                self.sovereign.ircchannels.append(channel_to_add)
+            else:
+                channel_to_add = self.sovereign.ircchannels[channel_index]
+
+            if (not ("@" + self.msg_split[2]) in order_commands):
+                self.response.append("Invalid orderset")
+                return
+
+            orderset = order_commands["@" + self.msg_split[2]]
+
+            orderset.authorized_channels.append(channel_to_add)
+
+            self.response.append("Added channel to orderset")
+
+        elif (self.msg_split[0] == "@deletechan"):
+
+            if (len(self.msg_split) < 3):
+                self.response.append("Not enough params")
+                return
+
+            chan_index = self.findChannel(self.msg_split[1])
+
+            if (chan_index == -1):
+                self.response.append("Invalid channel")
+                return
+
+
+            if (not ("@" + self.msg_split[2]) in order_commands):
+                self.response.append("Invalid orderset")
+                return
+
+            orderset = order_commands["@" + self.msg_split[2]]
+
+            del orderset.authorized_channels[chan_index]
+
+            self.response.append("Deleted user from orderset")
+
+        elif (self.msg_split[0] == "@listchans"):
+
+            if (len(self.msg_split) < 2):
+                self.response.append("Not enough params")
+                return
+
+            if (not ("@" + self.msg_split[1]) in order_commands):
+                self.response.append("Invalid orderset")
+                return
+
+            orderset = order_commands["@" + self.msg_split[1]]
+
+            chans_list = []
+            for c in orderset.authorized_channels:
+                chans_list.append(c.name)
+
+            self.response.append("List of channels: " + (", ".join(chans_list)))
+
+
 
 
     def findChannel(self, channel_name, channel_pool = None):
         channel_pool = self.sovereign.ircchannels if channel_pool == None else channel_pool
         channel_name = channel_name.lower()
         index = 0
-        for irc_chan in self.sovereign.ircchannels:
+        for irc_chan in channel_pool:
             if (irc_chan.name.lower() == channel_name):
                 return index
             index = index + 1
@@ -98,6 +242,7 @@ class SovereignMessageHandler:
 
     def updateOrder(self, order_set, user, channel, msg):
         self.response = []
+        user = user.split('!')[0]
 
         user_index = self.findUser(user, order_set.admins)
 

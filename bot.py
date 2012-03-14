@@ -33,16 +33,6 @@ class IAMABot(irc.IRCClient):
 
         self.session.commit()
 
-    def who(self, channel):
-        self.sendLine('WHO %s' % channel)
-
-    def irc_RPL_WHOREPLY(self, *nargs):
-        "Receive WHO reply from server"
-        print 'WHO:', nargs
-
-    def irc_RPL_ENDOFWHO(self, *nargs):
-        "Called when WHO output is complete"
-        print 'WHO COMPLETE'
 
 class SovereignFactory(protocol.ClientFactory):
 
