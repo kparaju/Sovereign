@@ -204,9 +204,7 @@ class SovereignMessageHandler:
 
         elif (self.msg_split[0] == "@addadmin"):
 
-            if (len(self.msg_split) < 2):
-                self.response.append("Not enough params")
-                return
+
 
             user_index = self.findUser(self.msg_split[1])
             if (user_index == -1):
@@ -245,6 +243,11 @@ class SovereignMessageHandler:
             self.response.append("List of admins: " + (", ".join(users_list)))
 
 
+    def verifyNumberOfParams(self, number):
+        if (len(self.msg_split) < number):
+            self.response.append("Not enough params")
+            return False
+        return True
 
 
 
@@ -317,6 +320,9 @@ class SovereignMessageHandler:
 
         if (number < 0):
             self.response.append("You're doing it wrong!")
+            return
+
+        if (not self.verifyNumberOfParams(4)):
             return
 
         territory = self.msg_split[2]

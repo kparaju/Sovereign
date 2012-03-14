@@ -63,7 +63,7 @@ orderset_authorized_channels_table = Table('orderset_authorized_channels', Base.
 
 orderset_authorized_users_table = Table('orderset_authorized_users', Base.metadata,
     Column('orderset_id', Integer, ForeignKey('ordersets.id')),
-    Column('ircuser_id', Integer, ForeignKey('ircusers.id'))
+    Column('ircusers_id', Integer, ForeignKey('ircusers.id'))
 )
 
 class OrderSet(Base):
