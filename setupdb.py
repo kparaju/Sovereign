@@ -9,35 +9,30 @@ engine = create_engine('sqlite:///sovereign.db', echo=False)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-if (os.path.isfile("sovereign.db")):
-    print "database already exists"
-    exit()
+if (not os.path.isfile("sovereign.db")):
+    Base.metadata.create_all(engine)
 
-Base.metadata.create_all(engine)
+    s = Sovereign("Sovereign-Beta")
+    s.serverhost = "irc.rizon.net"
+    s.serverport = 6667
+    s.serverpass = ""
+    c = IRCChannel("#sovereign-beta")
+    s.ircchannels.append(c)
 
-s = Sovereign("Sovereign-Beta")
-s.serverhost = "irc.rizon.net"
-s.serverport = 6667
-s.serverpass = ""
-c = IRCChannel("#sovereign-beta")
-s.ircchannels.append(c)
+    os = OrderSet("home")
+    order_1 = Order("t","u","info")
+    order_2 = Order("t__2","u_2","info_2")
+    os.orders.append(order_1)
+    os.orders.append(order_2)
 
-os = OrderSet("home")
-order_1 = Order("t","u","info")
-order_2 = Order("t__2","u_2","info_2")
-os.orders.append(order_1)
-os.orders.append(order_2)
+    s.ordersets.append(os)
 
-s.ordersets.append(os)
+    session.add(s)
+    session.commit()
 
-session.add(s)
-session.commit()
+    bot = session.query(Sovereign).first()
+    for chan in bot.ircchannels:
+        print chan.name + " " + chan.key
+else:
+    bot = session.query(Sovereign).first()
 
-bot = session.query(Sovereign).first()
-for chan in bot.ircchannels:
-	print chan.name + " " + chan.key
-
-
-os = bot.ordersets
-for orderset in bot.ordersets:
-    print orderset.name + " - " + orderset.orders.__repr__()

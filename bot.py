@@ -21,13 +21,28 @@ class IAMABot(irc.IRCClient):
 
     def privmsg(self, user, channel, msg):
 
-        message_handler = SovereignMessageHandler(self.sovereign, user, channel, msg)
-        for response in message_handler.response:
-            self.msg(channel, response.encode())
+        try:
+            message_handler = SovereignMessageHandler(self, user, channel, msg)
+            for response in message_handler.response:
+                self.msg(channel, response.encode())
+        except Exception as e:
+            self.msg(channel, "Someone f'd up. Error: " + e.message)
+
 
         # Commit any changes made by the message handler
 
         self.session.commit()
+
+    def who(self, channel):
+        self.sendLine('WHO %s' % channel)
+
+    def irc_RPL_WHOREPLY(self, *nargs):
+        "Receive WHO reply from server"
+        print 'WHO:', nargs
+
+    def irc_RPL_ENDOFWHO(self, *nargs):
+        "Called when WHO output is complete"
+        print 'WHO COMPLETE'
 
 class SovereignFactory(protocol.ClientFactory):
 
