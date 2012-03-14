@@ -202,6 +202,49 @@ class SovereignMessageHandler:
 
             self.response.append("List of channels: " + (", ".join(chans_list)))
 
+        elif (self.msg_split[0] == "@addadmin"):
+
+            if (len(self.msg_split) < 2):
+                self.response.append("Not enough params")
+                return
+
+            user_index = self.findUser(self.msg_split[1])
+            if (user_index == -1):
+                user_to_add = IRCUser(self.msg_split[1])
+                self.sovereign.ircusers.append(user_to_add)
+            else:
+                user_to_add = self.sovereign.ircusers[user_index]
+
+            user_to_add.admin = True
+
+            self.response.append("Added user to admin")
+
+        elif (self.msg_split[0] == "@deleteuser"):
+
+            if (len(self.msg_split) < 2):
+                self.response.append("Not enough params")
+                return
+
+            user_index = self.findUser(self.msg_split[1])
+
+            if (user_index == -1):
+                self.response.append("Invalid user")
+                return
+
+            self.sovereign.ircusers[user_index].admin = False
+
+            self.response.append("Deleted user from admin")
+
+        elif (self.msg_split[0] == "@listadmins"):
+
+            users_list = []
+            for ircuser in self.sovereign.ircusers:
+                if ircuser.admin:
+                    users_list.append(ircuser.nick)
+
+            self.response.append("List of admins: " + (", ".join(users_list)))
+
+
 
 
 
@@ -232,8 +275,15 @@ class SovereignMessageHandler:
         self.response = []
 
         for order in order_set.orders:
-            message = "\002Priority %s:\002 \00304%s\017 | \037\00302%s\017 | %s" \
-                        % (counter, order.territory, order.url, order.info)
+
+            message = "\002Priority %s:\002 \00302%s %s %s" \
+            % (counter, order.territory, order.url, order.info)
+
+            if (order.url.find("http:") == 0):
+                message = "\002Priority %s:\002 \00304%s\017 | \037\00302%s\017 | %s" \
+                % (counter, order.territory, order.url, order.info)
+
+
             self.response.append(message)
             counter = counter + 1
 
@@ -271,7 +321,7 @@ class SovereignMessageHandler:
 
         territory = self.msg_split[2]
         url = self.msg_split[3]
-        info = self.msg_split[4]
+        info = ' '.join(self.msg_split[4:])
 
         if (len(order_set.orders) <= number):
             order_set.orders.append(Order(territory, url, info))
