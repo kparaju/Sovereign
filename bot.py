@@ -16,6 +16,10 @@ class IAMABot(irc.IRCClient):
         self.password = self.sovereign.serverpass.encode()
 
     def signedOn(self):
+        if (self.sovereign.nickservpwd != None):
+            self.msg("NickServ", "IDENTIFY " + self.sovereign.nickservpwd.encode())
+            self.msg("NickServ", "update")
+
         for chan in self.sovereign.ircchannels:
             self.join(chan.name.encode(), chan.key.encode())
 
@@ -23,10 +27,11 @@ class IAMABot(irc.IRCClient):
 
         try:
             message_handler = SovereignMessageHandler(self, user, channel, msg)
+            respondto = channel if channel.find("#") == 0 else user.split("!")[0]
             for response in message_handler.response:
-                self.msg(channel, response.encode())
+                self.msg(respondto, response.encode())
         except Exception as e:
-            self.msg(channel, "Someone f'd up. Error: " + e.message)
+            self.msg(channel, "Something went wrong. Error: " + e.message)
 
 
         # Commit any changes made by the message handler

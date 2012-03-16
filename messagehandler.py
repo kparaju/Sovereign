@@ -37,7 +37,7 @@ class SovereignMessageHandler:
                 self.updateOrder(order_commands[self.msg_split[0]], user, channel, msg)
 
 
-        if (not self.sovereign.ircusers[user_index].admin):
+        if (user_index == -1):
             return
 
         if (self.msg_split[0] == "@join"):
@@ -138,6 +138,7 @@ class SovereignMessageHandler:
                 return
 
             channel_index = self.findChannel(self.msg_split[1])
+
             if (channel_index == -1):
                 channel_to_add = IRCChannel(self.msg_split[1])
                 self.sovereign.ircchannels.append(channel_to_add)
@@ -209,7 +210,7 @@ class SovereignMessageHandler:
 
             self.response.append("Added user to admin")
 
-        elif (self.msg_split[0] == "@deleteuser"):
+        elif (self.msg_split[0] == "@deleteadmin"):
 
             if (not self.verifyNumberOfParams(2)):
                 return
@@ -232,6 +233,41 @@ class SovereignMessageHandler:
                     users_list.append(ircuser.nick)
 
             self.response.append("List of admins: " + (", ".join(users_list)))
+
+        elif (self.msg_split[0] == "@addorderset"):
+
+            if (not self.verifyNumberOfParams(2)):
+                return
+            if (("@" + self.msg_split[1]) in order_commands):
+                self.response.append("Order set already exists")
+                return
+
+            orderset_to_add = OrderSet(self.msg_split[1])
+            self.sovereign.ordersets.append(orderset_to_add)
+
+            self.response.append("Added orderset")
+
+        elif (self.msg_split[0] == "@deleteorderset"):
+
+            if (not self.verifyNumberOfParams(2)):
+                return
+            if not (("@" + self.msg_split[1]) in order_commands):
+                self.response.append("Order set does not exist")
+                return
+            for order_set in self.sovereign.ordersets:
+                if order_set.name == self.msg_split[1]:
+                    self.response.append("Deleted orderset")
+                    return
+        elif (self.msg_split[0] == "@listorderset"):
+
+            os_list = []
+            for order_set in self.sovereign.ordersets:
+                os_list.append(order_set.name)
+
+            self.response.append("List of order sets: " + (", ".join(os_list)))
+
+        elif (self.msg_split[0] == "@raw"):
+            self.bot.sendLine(" ".join(self.msg_split[1:]))
 
 
     def verifyNumberOfParams(self, number):
@@ -304,10 +340,9 @@ class SovereignMessageHandler:
                     self.response.append("Orders cleared")
                 else:
                     number = int(self.msg_split[2]) - 1
-                    if (number >= 0) & (number < len(self.msg_split)):
+                    if (number >= 0) & (number < len(order_set.orders)):
                         del order_set.orders[number]
-                        self.response.append("Order cleared")
-                return
+                        self.response.append("Order %s cleared from %s"  % ( number + 1, order_set.name))
 
         if (number < 0):
             self.response.append("You're doing it wrong!")
@@ -328,4 +363,4 @@ class SovereignMessageHandler:
             order_set.orders[number].info = info
 
 
-        self.response.append("Updated... hopefully.")
+        self.response.append("Updated orderset " + order_set.name)

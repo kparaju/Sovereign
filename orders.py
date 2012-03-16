@@ -14,6 +14,7 @@ class Sovereign(Base):
     serverpass = Column(String)
     serverhost = Column(String)
     serverport = Column(Integer)
+    nickservpwd = Column(String)
 
     ordersets = relationship('OrderSet', order_by='OrderSet.id', backref='sovereign')
     ircchannels = relationship('IRCChannel', order_by='IRCChannel.name', backref='sovereign')
@@ -48,6 +49,9 @@ class IRCChannel(Base):
     autojoin = Column(Boolean)
 
     def __init__(self, name, key=''):
+        if ((name.find("#") != 0) & (len(name) < 2)):
+            raise Exception("Invalid channel name")
+
         self.name = name
         self.key = key
         self.autojoin = True
