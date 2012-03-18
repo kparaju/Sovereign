@@ -270,7 +270,7 @@ class SovereignMessageHandler:
             self.bot.sendLine(" ".join(self.msg_split[1:]))
 
         elif (self.msg_split[0] == "@help"):
-            self.bot.sendLine("")
+            self.bot.sendLine("https://github.com/kparaju/Sovereign/blob/master/help.md")
 
 
     def verifyNumberOfParams(self, number):
