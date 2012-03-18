@@ -4,16 +4,16 @@ Sovereign Commands
 General commands
 ----------------
 
-`@orderset`: Show orders in an orderset.
+`@<orderset>`: Show orders in an orderset.
 
 Orderset Administration
 -----------------------
 
-`@updateorderset <PRIORITY> <TERRITORY> <LINK> <MORE INFO>` - Update an order set item
+`@update<orderset> <PRIORITY> <TERRITORY> <LINK> <MORE INFO>` - Update an order set item
 
-`@updateorderset clear` - Clears the orderset
+`@update<orderset> clear` - Clears the orderset
 
-`@updateorderset clear <PRIORITY>` - Clears a specific priority order in an orderset
+`@update<orderset> clear <PRIORITY>` - Clears a specific priority order in an orderset
 
 Bot Administration
 ------------------
