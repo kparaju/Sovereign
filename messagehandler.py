@@ -37,6 +37,9 @@ class SovereignMessageHandler:
                 self.updateOrder(order_commands[self.msg_split[0]], user, channel, msg)
 
 
+        if (self.msg_split[0] == "@help"):
+            self.response.append("Commands help: https://github.com/kparaju/Sovereign/blob/master/help.md")
+
         if (user_index == -1):
             return
 
@@ -269,8 +272,6 @@ class SovereignMessageHandler:
         elif (self.msg_split[0] == "@raw"):
             self.bot.sendLine(" ".join(self.msg_split[1:]))
 
-        elif (self.msg_split[0] == "@help"):
-            self.bot.sendLine("https://github.com/kparaju/Sovereign/blob/master/help.md")
 
 
     def verifyNumberOfParams(self, number):
