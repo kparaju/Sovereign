@@ -258,7 +258,7 @@ class SovereignMessageHandler:
                 if order_set.name == self.msg_split[1]:
                     self.response.append("Deleted orderset")
                     return
-        elif (self.msg_split[0] == "@listorderset"):
+        elif (self.msg_split[0] == "@listordersets"):
 
             os_list = []
             for order_set in self.sovereign.ordersets:
@@ -268,6 +268,9 @@ class SovereignMessageHandler:
 
         elif (self.msg_split[0] == "@raw"):
             self.bot.sendLine(" ".join(self.msg_split[1:]))
+
+        elif (self.msg_split[0] == "@help"):
+            self.bot.sendLine("")
 
 
     def verifyNumberOfParams(self, number):
