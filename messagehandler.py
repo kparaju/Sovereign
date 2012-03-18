@@ -21,6 +21,7 @@ class SovereignMessageHandler:
 
         user = user.split('!')[0]
         user_index = self.findUser(user)
+        admin_index = self.findAdmin(user)
 
 
         # Check to see if the command the user supplied is an "order" command
@@ -40,7 +41,7 @@ class SovereignMessageHandler:
         if (self.msg_split[0] == "@help"):
             self.response.append("Commands help: https://github.com/kparaju/Sovereign/blob/master/help.md")
 
-        if (user_index == -1):
+        if (admin_index == -1):
             return
 
         if (self.msg_split[0] == "@join"):
@@ -299,6 +300,17 @@ class SovereignMessageHandler:
         index = 0
         for irc_user in user_pool:
             if (irc_user.nick.lower() == user_nick):
+                return index
+            index = index + 1
+
+        return -1
+
+    def findAdmin(self, user_nick):
+        user_pool = self.sovereign.ircusers
+        user_nick = user_nick.lower()
+        index = 0
+        for irc_user in user_pool:
+            if ((irc_user.nick.lower() == user_nick) & (irc_user.admin == True)):
                 return index
             index = index + 1
 
