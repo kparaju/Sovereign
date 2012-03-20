@@ -258,10 +258,14 @@ class SovereignMessageHandler:
             if not (("@" + self.msg_split[1]) in order_commands):
                 self.response.append("Order set does not exist")
                 return
+            
+            os_index = 0
             for order_set in self.sovereign.ordersets:
                 if order_set.name == self.msg_split[1]:
+                    del self.sovereign.ordersets[os_index]
                     self.response.append("Deleted orderset")
                     return
+                os_index = os_index + 1
         elif (self.msg_split[0] == "@listordersets"):
 
             os_list = []
