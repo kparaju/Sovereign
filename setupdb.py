@@ -20,11 +20,6 @@ if (not os.path.isfile("sovereign.db")):
     s.ircchannels.append(c)
 
     os = OrderSet("home")
-    order_1 = Order("t","u","info")
-    order_2 = Order("t__2","u_2","info_2")
-    os.orders.append(order_1)
-    os.orders.append(order_2)
-
     s.ordersets.append(os)
 
     session.add(s)

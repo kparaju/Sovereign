@@ -94,20 +94,16 @@ class Order(Base):
     __tablename__ = 'orders'
 
     id = Column(Integer, Sequence('order_id_seq'), primary_key=True)
-    territory = Column(String)
-    url = Column(String)
     info = Column(String)
 
     orderset_id = Column(Integer, ForeignKey('ordersets.id'))
 
 
-    def __init__(self, territory, url, info):
-        self.territory = territory
-        self.url = url
+    def __init__(self, info):
         self.info = info
 
     def __repr__(self):
-        return "<Order('%s','%s','%s')>" % (self.territory, self.url, self.info)
+        return "<Order('%s')>" % (self.info)
 
 
 

@@ -179,7 +179,7 @@ class SovereignMessageHandler:
 
             del orderset.authorized_channels[chan_index]
 
-            self.response.append("Deleted user from orderset")
+            self.response.append("Deleted channel from orderset")
 
         elif (self.msg_split[0] == "@listchans"):
 
@@ -321,15 +321,12 @@ class SovereignMessageHandler:
         self.response = []
 
         for order in order_set.orders:
-
-            message = "\002Priority %s:\002 \00302%s %s %s" \
-            % (counter, order.territory, order.url, order.info)
-
-            if (order.url.find("http:") == 0):
+            message = "\002Priority %s:\002 \00302%s" % (counter, order.info)
+            if (order.info.find("http:") > 0):
+                urli = order.info.find('http:')
+                url2end = order.info[urli:]
                 message = "\002Priority %s:\002 \00304%s\017 | \037\00302%s\017 | %s" \
-                % (counter, order.territory, order.url, order.info)
-
-
+                 % (counter, order.info[:urli], url2end[:url2end.find(' ')], url2end[url2end.find(' '):])
             self.response.append(message)
             counter = counter + 1
 
@@ -359,23 +356,20 @@ class SovereignMessageHandler:
                     if (number >= 0) & (number < len(order_set.orders)):
                         del order_set.orders[number]
                         self.response.append("Order %s cleared from %s"  % ( number + 1, order_set.name))
+                return
 
         if (number < 0):
             self.response.append("You're doing it wrong!")
             return
 
-        if (not self.verifyNumberOfParams(4)):
+        if (not self.verifyNumberOfParams(3)):
             return
 
-        territory = self.msg_split[2]
-        url = self.msg_split[3]
-        info = ' '.join(self.msg_split[4:])
+        info = ' '.join(self.msg_split[2:])
 
         if (len(order_set.orders) <= number):
-            order_set.orders.append(Order(territory, url, info))
+            order_set.orders.append(Order(info))
         else:
-            order_set.orders[number].territory = territory
-            order_set.orders[number].url = url
             order_set.orders[number].info = info
 
 

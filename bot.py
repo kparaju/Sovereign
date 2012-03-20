@@ -25,13 +25,11 @@ class IAMABot(irc.IRCClient):
 
     def privmsg(self, user, channel, msg):
 
-        try:
-            message_handler = SovereignMessageHandler(self, user, channel, msg)
-            respondto = channel if channel.find("#") == 0 else user.split("!")[0]
-            for response in message_handler.response:
-                self.msg(respondto, response.encode())
-        except Exception as e:
-            self.msg(channel, "Something went wrong. Error: " + e.message)
+
+        message_handler = SovereignMessageHandler(self, user, channel, msg)
+        respondto = channel if channel.find("#") == 0 else user.split("!")[0]
+        for response in message_handler.response:
+            self.msg(respondto, response.encode())
 
 
         # Commit any changes made by the message handler
