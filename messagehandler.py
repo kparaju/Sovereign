@@ -338,6 +338,9 @@ class SovereignMessageHandler:
             self.response.append("No orders found.")
 
     def updateOrder(self, order_set, user, channel, msg):
+        if (not self.verifyNumberOfParams(2)):
+            return
+
         self.response = []
         user = user.split('!')[0]
 
