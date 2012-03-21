@@ -44,6 +44,11 @@ class SovereignMessageHandler:
         if (admin_index == -1):
             return
 
+
+        """
+        This is _really_ ugly and is NOT the right way to do it. TODO, restructure this PoS.
+        """
+        
         if (self.msg_split[0] == "@join"):
 
             # Do some validation
