@@ -23,4 +23,4 @@ Running
 License
 -------
 
-MIT License, see [LICENSE.md](LICENSE.md) for more info
+MIT License, see [LICENSE](LICENSE) for more info
