@@ -14,6 +14,7 @@ class IAMABot(irc.IRCClient):
         self.sovereign = self.session.query(Sovereign).first()
         self.nickname = self.sovereign.nickname.encode()
         self.password = self.sovereign.serverpass.encode()
+        lineRate = 0.5
 
     def signedOn(self):
         if (self.sovereign.nickservpwd != None):
