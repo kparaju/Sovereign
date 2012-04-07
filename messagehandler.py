@@ -107,18 +107,17 @@ class SovereignMessageHandler:
             if (not self.verifyNumberOfParams(3)):
                 return
 
-            user_index = self.findUser(self.msg_split[1])
-
-            if (user_index == -1):
-                self.response.append("Invalid user")
-                return
-
-
             if (not ("@" + self.msg_split[2]) in order_commands):
                 self.response.append("Invalid orderset")
                 return
 
             orderset = order_commands["@" + self.msg_split[2]]
+
+            user_index = self.findUser(self.msg_split[1], orderset.admins)
+
+            if (user_index == -1):
+                self.response.append("User does not exist in orderset")
+                return
 
             del orderset.admins[user_index]
 
@@ -169,18 +168,18 @@ class SovereignMessageHandler:
             if (not self.verifyNumberOfParams(3)):
                 return
 
-            chan_index = self.findChannel(self.msg_split[1])
 
-            if (chan_index == -1):
-                self.response.append("Invalid channel")
-                return
-
+            orderset = order_commands["@" + self.msg_split[2]]
 
             if (not ("@" + self.msg_split[2]) in order_commands):
                 self.response.append("Invalid orderset")
                 return
 
-            orderset = order_commands["@" + self.msg_split[2]]
+            chan_index = self.findChannel(self.msg_split[1], orderset.authorized_channels)
+
+            if (chan_index == -1):
+                self.response.append("Channel does not exist in orderset")
+                return
 
             del orderset.authorized_channels[chan_index]
 
