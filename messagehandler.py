@@ -39,7 +39,7 @@ class SovereignMessageHandler:
 
 
         if (self.msg_split[0] == "@help"):
-            self.response.append("Commands help: https://github.com/kparaju/Sovereign/blob/master/help.md")
+            self.response.append("Commands help and more info: http://kshitijparajuli.com/Sovereign/")
 
         if (admin_index == -1):
             return
