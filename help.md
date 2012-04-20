@@ -1,13 +1,11 @@
 Sovereign Commands
-==================
+------------------
 
-General commands
-----------------
+### General commands
 
 `@<orderset>`: Show orders in an orderset.
 
-Orderset Administration
------------------------
+### Orderset Administration
 
 `@update<orderset> <PRIORITY> <TERRITORY> <LINK> <MORE INFO>` - Update an order set item
 
@@ -15,8 +13,7 @@ Orderset Administration
 
 `@update<orderset> clear <PRIORITY>` - Clears a specific priority order in an orderset
 
-Bot Administration
-------------------
+### Bot Administration
 
 `@join #channel` - Joins the channel
 
