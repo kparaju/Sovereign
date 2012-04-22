@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Sovereign by kparaju</title>
+    
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Sovereign</h1>
+        <p>An IRC Bot</p>
+        <p class="view"><a href="https://github.com/kparaju/Sovereign">View the Project on GitHub <small>kparaju/Sovereign</small></a></p>
+        <ul>
+          <li><a href="https://github.com/kparaju/Sovereign/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/kparaju/Sovereign/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/kparaju/Sovereign">Fork On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Sovereign - An IRC Bot</h1>
+
+<h3>Requirements</h3>
+
+<ul>
+<li><p><a href="http://twistedmatrix.com/trac/">Twisted</a> 12.0.0</p></li>
+<li><p><a href="http://www.sqlalchemy.org/">SQLAlchemy</a> 0.76</p></li>
+</ul><h3>Running</h3>
+
+<ul>
+<li>Modify <code>setupdb.py</code> with the correct server/bot information.</li>
+<li>Run <code>python setupdb.py</code>. This sets up the database for first time use</li>
+<li>
+<code>python bot.py</code> starts up the bot and connects to the server</li>
+<li>Optionally, for an interactive console, run <code>python -i setupdb.py</code>.</li>
+</ul><h3>License</h3>
+
+<p>MIT License, see <a href="https://github.com/kparaju/Sovereign/blob/master/LICENSE">LICENSE</a> for more info</p>
+
+<h2>Commands Help</h2>
+
+<h3>General commands</h3>
+
+<p><code>@&lt;orderset&gt;</code>: Show orders in an orderset.</p>
+
+<h3>Orderset Administration</h3>
+
+<p><code>@update&lt;orderset&gt; &lt;PRIORITY&gt; &lt;TERRITORY&gt; &lt;LINK&gt; &lt;MORE INFO&gt;</code> - Update an order set item</p>
+
+<p><code>@update&lt;orderset&gt; clear</code> - Clears the orderset</p>
+
+<p><code>@update&lt;orderset&gt; clear &lt;PRIORITY&gt;</code> - Clears a specific priority order in an orderset</p>
+
+<h3>Bot Administration</h3>
+
+<p><code>@join #channel</code> - Joins the channel</p>
+
+<p><code>@join #channel &lt;password&gt;</code> - Joins the channel w/ password</p>
+
+<p><code>@part #channel</code> - Parts channel and removes from autojoin list</p>
+
+<p><code>@adduser &lt;nick&gt; orderset</code> - Adds a user (orderset admin) to an orderset</p>
+
+<p><code>@deleteuser &lt;nick&gt; orderset</code> - Delete a user from an orderset</p>
+
+<p><code>@listusers orderset</code> - List the users in an orderset</p>
+
+<p><code>@addchan #channel orderset</code> - Adds a channel to an orderset</p>
+
+<p><code>@deletechan #channel orderset</code> - Delete a channel from an orderset</p>
+
+<p><code>@listchan orderset</code> - List the channels in an orderset</p>
+
+<p><code>@addadmin &lt;nick&gt;</code> - Add an admin</p>
+
+<p><code>@deleteadmin &lt;nick&gt;</code> - Delete an admin</p>
+
+<p><code>@listadmins</code> - Lists all the admins</p>
+
+<p><code>@addorderset orderset</code> - Adds an orderset</p>
+
+<p><code>@deleteorderset orderset</code> - Deletes an orderset</p>
+
+<p><code>@listordersets</code> - List order sets</p>
+
+<p><code>@raw &lt;raw&gt;</code> - Send RAW text</p>
+
+<p><code>@help</code> - Halp!</p>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/kparaju">kparaju</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-31030949-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
