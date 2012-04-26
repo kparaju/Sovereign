@@ -27,7 +27,7 @@ class IAMABot(irc.IRCClient):
     def privmsg(self, user, channel, msg):
         if (msg.find('@') == 0):
             try:
-                message_handler = SovereignMessageHandler(self, user, channel, unicode(msg,'utf-8'))
+                message_handler = SovereignMessageHandler(self, user, channel, msg)
                 respondto = channel if channel.find("#") == 0 else user.split("!")[0]
                 for response in message_handler.response:
                     self.msg(respondto, response.encode('ISO-8859-1', 'replace'))
