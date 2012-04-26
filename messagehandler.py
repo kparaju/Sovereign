@@ -377,7 +377,7 @@ class SovereignMessageHandler:
             return
 
         info = ' '.join(self.msg_split[2:])
-        info = uniode(msg, 'utf-8')
+        info = unicode(msg, 'utf-8')
 
 
         if (len(order_set.orders) <= number):
